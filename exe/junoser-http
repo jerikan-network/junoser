@@ -1,0 +1,42 @@
+#!/usr/bin/env ruby
+
+# HTTP web server to handle check/display configuration. This is
+# mostly meant to be able to check lot of configuration files without
+# the penalty of setting up the runtime each time.
+
+require 'sinatra'
+require 'stringio'
+
+$: << File.expand_path('../../lib', Pathname.new(__FILE__).realpath)
+
+require 'junoser'
+require 'junoser/display'
+require 'junoser/input'
+
+# Global parser
+parser = Junoser::Parser.new
+mutex = Mutex.new
+
+post '/format' do
+  begin
+    config = Junoser::Input.new(request.body).read
+    lines = Junoser::Display::Set.new(config).transform
+  rescue
+    return [422, $!.message]
+  end
+
+  # Not thread safe...
+  results = []
+  mutex.synchronize do
+    oldstderr, $stderr = $stderr, StringIO.new
+    results.append parser.parse_lines(lines)
+    results.append $stderr.string
+    $stderr = oldstderr
+  end
+
+  ok, stderr = results
+  if ok
+    return [200, lines]
+  end
+  return [422, stderr]
+end
