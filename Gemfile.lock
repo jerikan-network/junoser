@@ -11,10 +11,13 @@ GEM
     mini_portile2 (2.4.0)
     mustermann (1.1.1)
       ruby2_keywords (~> 0.0.1)
+    nio4r (2.5.2)
     nokogiri (1.10.8)
       mini_portile2 (~> 2.4.0)
     parslet (2.0.0)
     power_assert (1.1.6)
+    puma (4.3.3)
+      nio4r (~> 2.0)
     rack (2.2.2)
     rack-protection (2.0.8.1)
       rack
@@ -36,6 +39,7 @@ DEPENDENCIES
   bundler (~> 2.0)
   junoser!
   nokogiri
+  puma (~> 4.3)
   rake (~> 13.0)
   test-unit
 
