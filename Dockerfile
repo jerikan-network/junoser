@@ -10,7 +10,6 @@ FROM ruby:2.7-slim
 WORKDIR /app
 COPY --from=builder /app/ /app/
 COPY --from=builder $GEM_HOME/ $GEM_HOME/
-RUN apt-get update && apt-get install -y --no-install-recommends git && rm -rf /var/cache/apt
 RUN groupadd -r junoser && useradd --no-log-init -r -g junoser junoser
 
 USER junoser
